@@ -19,7 +19,8 @@ const alphabetLength = alphabet.length;
 const newIndex2 = (index + shiftValue) % alphabetLength;
 const encryptedSecondLetter = alphabet[newIndex2];
 //Step6
-friend.slice(0, 3);
+friend.slice(0, 3)
+    console.log()
 
 
 
