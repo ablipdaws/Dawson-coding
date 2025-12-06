@@ -1,0 +1,41 @@
+h1 {
+  color: chartreuse;
+}
+body {
+  font-family: Arial, sans-serif;
+  margin: 2rem;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+}
+/* Table Styles */  
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-family: inherit;
+}
+table th,
+table td {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+table thead th {
+  background: #f7f7f7;
+  font-weight: 600;
+}
+/* Responsive: stack rows on small screens (optional) */
+@media (max-width: 600px) {
+  table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  tr { margin-bottom: 1rem; }
+  td { 
+    display: flex;
+    justify-content: space-between;
+    padding: .5rem 0;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+  td::before { content: attr(data-label); font-weight: 600; margin-right: .5rem; }
+}
