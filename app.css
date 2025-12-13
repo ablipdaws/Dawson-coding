@@ -26,7 +26,7 @@ table thead th {
   font-weight: 600;
 }
 /* Responsive: stack rows on small screens (optional) */
-@media (max-width: 600px) {
+@media (max-width: 600px) 
   table, thead, tbody, th, td, tr { display: block; }
   thead { display: none; }
   tr { margin-bottom: 1rem; }
@@ -37,5 +37,129 @@ table thead th {
     border: none;
     border-bottom: 1px solid #eee;
   }
-  td::before { content: attr(data-label); font-weight: 600; margin-right: .5rem; }
+  td::before { content: attr(data-label); font-weight: 600; margin-right: .5rem; }{
+
+  }
+
+/* Link Styles */ 
+
+a:
+  color: #3498db;
+  text-decoration: none;
+
+/*
+div:hover {
+  background-color: lightgray;
+  outline: solid black 1px;
+  outline-offset: -4px;
 }
+*/
+a:hover {
+  text-decoration: underline;
+}
+/* Use border-box in all elements. */
+*
+{
+  box-sizing: border-box;
+}
+
+/* Add margin, padding, and border to the `body`. */
+body
+{
+  font-family: "Source Code Pro", monospace; /* Use Google Font for modern monospace look */
+  font-size: 16px; /* Set a base font size */
+  line-height: 2; /* Increase line height for better readability */
+  margin: 2rem;
+  padding: 2rem;
+  color: #33ff33; /* Classic green color for the text */
+  border: 2px solid #33ff33;
+  background-color: #131313; /* Set black as background for the "hacky" appearance */
+}
+
+h1
+{
+  font-size: 2.0rem; /* Set a larger font size for main headings */
+  text-align: center; /* Align the main heading to the center */
+  text-shadow: 3px 3px 5px rgba(0, 204, 0, 0.7); /* Add a drop shadow effect for emphasis */
+}
+
+h2
+{
+  font-size: 1.6rem; /* Set a moderate font size for sub-headings */
+  font-weight: 600; /* Make it slightly bolder for differentiation */
+  text-transform: uppercase; /* Convert text to uppercase for visual prominence */
+}
+
+h3
+{
+  font-size: 1.2rem; /* A size that's between h2 and p for differentiation */
+}
+
+/* Apply padding below headers to provide spacing and ensure content doesn't feel cramped. */
+h1, h2, h3
+{
+  padding-bottom: 1rem;
+}
+
+p, li, table, form
+{
+  font-size: 0.8rem;
+}
+
+a
+{
+  text-decoration: none; /* Removing default underline from links */
+  color: #66ff66; /* A slightly lighter shade for links for better distinction */
+}
+
+/* Separate sections with margins to utilize collapsing margins. Also, use borders to space them apart. */
+main section,
+footer section
+{
+  margin: 4rem 0;
+  border-top: 2px solid #33ff33;
+}
+
+/* Adjust form elements to capture same look and feel. */
+form input,
+form textarea,
+form select
+{
+  padding: 0.1rem 0.2rem;
+  color: #33ff33;
+  border: 2px dotted #33ff33;
+  background-color: #131313;
+}
+
+form fieldset
+{
+  border: none;
+}
+
+form button
+{
+  padding: 0.5rem 1rem;
+  color: #33ff33;
+  border: 2px solid #33ff33;
+  background-color: #131313;
+}
+
+/* Remove outlines from form elements, ensuring a cleaner look. */
+form input,
+form textarea
+{
+  outline: none;
+}
+
+/* Make the profile picture rounded, and add a border. */
+.image-container img
+{
+  border-radius: 50%;
+}
+
+/* === HELPERS === */
+.border-dotted
+{
+  border: 2px dotted #33ff33;
+}
+
