@@ -1,84 +1,40 @@
-// categories is the main data structure for the app; it looks like this:
 
-function App() {
-//import axios from 'axios';
-//export default axios.create({
-    baseURL: 'http://localhost:3500'
-//})
+
+const categoryNumber = 6
+const questionsNumber = 5
+const api_url =  "https://rithm-jeopardy.herokuapp.com/api";
+
+
+const categories = [];
+
+async function getCategoryIds() {
+  const res = await axios.get(
+    "https://rithm-jeopardy.herokuapp.com/api/categories?count=100"
+  );
+
+  const allIds = res.data.map(cat => cat.id);
+  // Shuffle and take first categoryNumber
+  return allIds
+    .sort(() => Math.random() - 0.5)
+    .slice(0, categoryNumber);
 }
 
-const integersArray = Array.from({ length: 100 }, (_, i) => i + 1);
-console.log(integersArray);
+//async function getCategoryIds(){
+//    let res = await axios.get(`${api_url}/categories?count=100`)
+//    let categoryIds = _.sampleSize(res.data, categoryNumber).map(cat => cat.id); 
+//    console.log(categoryIds);
+//    return categoryIds;
 
+/** Get category data: { title, clues: [ {question, answer, showing} ] } */
+async function getCategory(catId) {
+  const res = await axios.get(
+    `https://rithm-jeopardy.herokuapp.com/api/category?id=${catId}`
+  );
 
-const categories = [
-  {
-    title: "Jokes",
-    clues: [
-      { question: "Why did the chicken cross the road?", answer: "To get to the other side", showing: null },
-      { question: "Why don't skeletons fight each other?", answer: "Because they don't have guts", showing: null },
-      { question: "Why did the computer go to therapy?", answer: "Because it had too many tabs open", showing: null },
-      { question: "Why don't eggs tell secrets?", answer: "They might crack under pressure", showing: null },
-      { question: "Why was the math book always sad?", answer: "It had too many problems", showing: null }
-    ]
-  },
+  const cat = res.data;
+//App();
 
-  {
-    title: "Baseball",
-    clues: [
-      { question: "Iconic Yankee outfielder nicknamed 'Sultan of Swat'", answer: "Babe Ruth", showing: null },
-      { question: "Won the 2004 World Series, breaking an 86-year championship drought", answer: "Boston Red Sox", showing: null },
-      { question: "Holds the MLB record with seven career no‑hitters.", answer: "Nolan Ryan", showing: null },
-      { question: "Jackie Robinson broke MLB’s color barrier in 1947 while playing for this team", answer: "Brooklyn Dodgers", showing: null },
-      { question: "This ballpark, opened in 1912, is the oldest active stadium in Major League Baseball.", answer: "Fenway Park", showing: null }
-    ]
-  },
-
-  {
-    title: "Odd Jobs",
-    clues: [
-      { question: "People hired to stand in line for others, sometimes for hours.", answer: "Professional line sitter", showing: null },
-      { question: "This job pays people to test the comfort and feel of mattresses.", answer: "Mattress tester", showing: null },
-      { question: "Workers in this job sniff armpits to evaluate deodorant effectiveness.", answer: "Odor tester", showing: null },
-      { question: "This job requires people to chase birds away from airports using trained falcons.", answer: "Falconer (bird-scarer)", showing: null },
-      { question: "This job hires people to watch paint dry and report on how it changes over time.", answer: "Paint-drying observer", showing: null }
-    ]
-  },
-
-  {
-    title: "Movies",
-    clues: [
-      { question: "Jack dies in the end", answer: "Titanic", showing: null },
-      { question: "Blue humanoids on a beautiful alien world", answer: "Avatar", showing: null },
-      { question: "Young master of the elements", answer: "Avatar: The Last Airbender", showing: null },
-      { question: "Two friends' lifelong journey—one dies in the end", answer: "Beaches", showing: null },
-      { question: "Otherworldly demons are summoned to a house using a puzzle box", answer: "Hellraiser", showing: null }
-    ]
-  },
-
-  {
-    title: "/'cat'/egory",
-    clues: [
-      { question: "Orange cat", answer: "Tabby", showing: null },
-      { question: "Asian-origin cat", answer: "Siamese", showing: null },
-      { question: "Asian-origin cat; also a capital city in India", answer: "Bombay", showing: null },
-      { question: "This hairless breed is known for its wrinkled skin", answer: "Sphynx", showing: null },
-      { question: "Known for its folded ears, this breed originated in Scotland in the 1960s.", answer: "Scottish Fold", showing: null }
-    ]
-  }
-];
-
-let res = await axios.get(`https://rithm-jeopardy.herokuapp.com/api/categories?
-
-count=100`)
-function getRandomCategoryIds(numCategories){}
-/** Get NUM_CATEGORIES random category from API.
- * Returns array of category ids
- */
-
-function getCategoryIds() {
-}
-let res2 = await.axios.get(`"https://rithm-jeopardy.herokuapp.com/api/categories?count=[integer]"`)
+//let res2 = await.axios.get(`"https://rithm-jeopardy.herokuapp.com/api/categories?count=[integer]"`)
 /** Return object with data about a category:
  *
  *  Returns { title: "Math", clues: clue-array }
@@ -91,18 +47,55 @@ let res2 = await.axios.get(`"https://rithm-jeopardy.herokuapp.com/api/categories
  *   ]
  */
 
-function getCategory(catId) {
+async function getCategory(catId) {
+    let res = await axios.get(`${api_url}/category?id=${catId}`);
+    return res.data;
 }
 
+ // Take only first questionsNumber clues
+  const clues = cat.clues.slice(0, questionsNumber).map(c => ({
+    question: c.question,
+    answer: c.answer,
+    showing: null
+  }));
+
+  return {
+    title: cat.title,
+    clues
+  };
 /** Fill the HTML table#jeopardy with the categories & cells for questions.
- *
+ 
  * - The <thead> should be filled w/a <tr>, and a <td> for each category
  * - The <tbody> should be filled w/NUM_QUESTIONS_PER_CAT <tr>s,
  *   each with a question for each category in a <td>
  *   (initally, just show a "?" where the question/answer would go.)
  */
-
 async function fillTable() {
+  const $thead = $("#jeopardy thead");
+  const $tbody = $("#jeopardy tbody");
+
+  $thead.empty();
+  $tbody.empty();
+
+    // Header row
+  let $tr = $("<tr>");
+  for (let cat of categories) {
+    $tr.append($("<th>").text(cat.title));
+  }
+  $thead.append($tr);
+
+  // Body rows
+  for (let i = 0; i < NUM_QUESTIONS_PER_CAT; i++) {
+    let $row = $("<tr>");
+    for (let j = 0; j < NUM_CATEGORIES; j++) {
+      $row.append(
+        $("<td>")
+          .attr("id", `${j}-${i}`)
+          .text("?")
+      );
+    }
+    $tbody.append($row);
+  }
 }
 
 /** Handle clicking on a clue: show the question or answer.
@@ -112,23 +105,45 @@ async function fillTable() {
  * - if currently "question", show answer & set .showing to "answer"
  * - if currently "answer", ignore click
  * */
-
 function handleClick(evt) {
+  const id = evt.target.id;
+  if (!id) return;
+
+  const [catIdx, clueIdx] = id.split("-").map(Number);
+  const clue = categories[catIdx].clues[clueIdx];
+
+  if (clue.showing === null) {
+    // Show question
+    $(`#${id}`).text(clue.question);
+    clue.showing = "question";
+  } else if (clue.showing === "question") {
+    // Show answer
+    $(`#${id}`).text(clue.answer);
+    clue.showing = "answer";
+  } else {
+    // Already answered — ignore
+    return;
+  }
 }
+
 
 /** Wipe the current Jeopardy board, show the loading spinner,
  * and update the button used to fetch data.
  */
 
 function showLoadingView() {
-
+  $("#jeopardy").hide();
+  $("#spinner").show();
+  $("#start").text("Loading...");
 }
 
 /** Remove the loading spinner and update the button used to fetch data. */
 
 function hideLoadingView() {
+  $("#spinner").hide();
+  $("#jeopardy").show();
+  $("#start").text("Restart");
 }
-
 /** Start game:
  *
  * - get random category Ids
@@ -137,12 +152,23 @@ function hideLoadingView() {
  * */
 
 async function setupAndStart() {
-}
+  showLoadingView();
 
+  const catIds = await getCategoryIds();
+
+  categories = [];
+  for (let id of catIds) {
+    categories.push(await getCategory(id));
+  }
+
+  await fillTable();
+  hideLoadingView();
+}
 /** On click of start / restart button, set up game. */
 
-// TODO
+$("#start").on("click", setupAndStart);
 
 /** On page load, add event handler for clicking clues */
 
-// TODO
+$("#jeopardy").on("click", "td", handleClick);
+}
